@@ -24,7 +24,7 @@ home = home.replace(/<script id="runtime-config" type="application\/json">([\s\S
   const cfg = { ...JSON.parse(json), static: true, local: false };
   return `<script id="runtime-config" type="application/json">${JSON.stringify(cfg)}</script>`;
 });
-home = home.replace('Sample practice bank · reference sync unavailable', 'Sample question bank · offline edition');
+home = home.replace('Sample practice bank · reference sync unavailable', 'ZZ Games question bank');
 await writeFile(`${OUT}/index.html`, home);
 
 for (const page of ['privacy', 'about']) {
@@ -39,6 +39,7 @@ for (const file of await readdir('public')) {
 for (const file of await readdir('public/assets')) await copyFile(`public/assets/${file}`, `${OUT}/assets/${file}`);
 await copyFile('static/local-api.mjs', `${OUT}/local-api.mjs`);
 await copyFile('src/demo.mjs', `${OUT}/demo.mjs`);
+await copyFile('src/prompts.mjs', `${OUT}/prompts.mjs`);
 for (const [path, body] of Object.entries(documents())) await writeFile(OUT + path, body);
 await writeFile(`${OUT}/.nojekyll`, '');
 await copyFile('LICENSE', `${OUT}/LICENSE`);
