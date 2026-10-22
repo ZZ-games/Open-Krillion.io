@@ -39,7 +39,7 @@ for (const file of await readdir('public')) {
 for (const file of await readdir('public/assets')) await copyFile(`public/assets/${file}`, `${OUT}/assets/${file}`);
 await copyFile('static/local-api.mjs', `${OUT}/local-api.mjs`);
 await copyFile('src/demo.mjs', `${OUT}/demo.mjs`);
-await copyFile('src/prompts.mjs', `${OUT}/prompts.mjs`);
+for (const f of ['prompts','prompt-lib','prompts-more1','prompts-more2','prompts-more3','prompts-more4']) await copyFile(`src/${f}.mjs`, `${OUT}/${f}.mjs`);
 for (const [path, body] of Object.entries(documents())) await writeFile(OUT + path, body);
 await writeFile(`${OUT}/.nojekyll`, '');
 await copyFile('LICENSE', `${OUT}/LICENSE`);

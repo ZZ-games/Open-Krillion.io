@@ -1,20 +1,10 @@
-// ZZ Games question bank for OpenKrillion.
-// Format per tier: answers separated by ";" — extra accepted spellings after "/".
-// Tiers: plankton 10 · tooclever 15 · schooler 30 · rare 60 · deepcut 85 · krillion 100
-const ORDER = ['plankton', 'tooclever', 'schooler', 'rare', 'deepcut', 'krillion'];
-function P(id, text, tiers) {
-  const answers = [];
-  for (const tier of ORDER) {
-    if (!tiers[tier]) continue;
-    for (const item of tiers[tier].split(';')) {
-      const [answer, ...aliases] = item.split('/').map(s => s.trim()).filter(Boolean);
-      if (answer) answers.push({ answer, tier, aliases });
-    }
-  }
-  return { id, text, answers };
-}
+import { P } from './prompt-lib.mjs';
+import { MORE1 } from './prompts-more1.mjs';
+import { MORE2 } from './prompts-more2.mjs';
+import { MORE3 } from './prompts-more3.mjs';
+import { MORE4 } from './prompts-more4.mjs';
 
-export const PROMPTS = [
+const BASE = [
 P('fruit', 'Name a fruit', {
   plankton: `Apple; Banana; Orange/oranges; Strawberry/strawberries; Grape/grapes; Watermelon`,
   tooclever: `Tomato`,
@@ -339,3 +329,5 @@ P('potato', 'Name a way to prepare potatoes', {
   krillion: `Pommes souffles/pommes souffle`,
 }),
 ];
+
+export const PROMPTS = [...BASE, ...MORE1, ...MORE2, ...MORE3, ...MORE4];
