@@ -19,6 +19,19 @@ function dailyIds(date) {
   return shuffle(PROMPTS.map(p => p.id), seeded(cycle + 7919)).slice(slot * 7, slot * 7 + 7);
 }
 const practiceIds = () => shuffle(PROMPTS.map(p => p.id), Math.random).slice(0, 7);
+// Endless: questions this browser hasn't seen come first; seen ones fill the rest.
+const SEEN = 'ok:seen-prompts';
+const readSeen = () => { try { return new Set(JSON.parse(localStorage.getItem(SEEN)) || []); } catch { return new Set(); } };
+function endlessIds() {
+  const seen = readSeen();
+  const fresh = shuffle(PROMPTS.filter(p => !seen.has(p.id)).map(p => p.id), Math.random);
+  const review = shuffle(PROMPTS.filter(p => seen.has(p.id)).map(p => p.id), Math.random);
+  const ids = [...fresh, ...review].slice(0, 7);
+  ids.forEach(id => seen.add(id));
+  try { localStorage.setItem(SEEN, JSON.stringify([...seen])); } catch { /* storage may be blocked */ }
+  return ids;
+}
+const diveCount = runs => Object.values(runs).filter(r => r.mode === 'endless').length;
 function puzzleFor(date, ids = dailyIds(date)) {
   return { date, dayNumber: dayIndex(date) + 1, source: 'ZZ Games question bank', prompts: ids.map(id => BY_ID[id]).filter(Boolean) };
 }
@@ -28,7 +41,7 @@ function promptDTO(p) {
 }
 function state(run) {
   const results = run.answers.slice().sort((a, b) => a.round - b.round);
-  return { ...promptDTO(runPuzzle(run)), runId: run.id, mode: run.mode, round: run.next_round, roundStart: run.round_start, pausedAt: run.paused_at || null, serverNow: Date.now(), completed: !!run.completed, results, score: results.reduce((s, r) => s + r.score, 0) };
+  return { ...promptDTO(runPuzzle(run)), ...(run.diveNumber ? { dayNumber: run.diveNumber } : {}), runId: run.id, mode: run.mode, round: run.next_round, roundStart: run.round_start, pausedAt: run.paused_at || null, serverNow: Date.now(), completed: !!run.completed, results, score: results.reduce((s, r) => s + r.score, 0) };
 }
 
 export async function localApi(fullPath, data) {
@@ -38,7 +51,7 @@ export async function localApi(fullPath, data) {
   const own = id => runs[id] || null;
 
   if (data === undefined) {
-    if (path === 'today') return promptDTO(puzzleFor(date));
+    if (path === 'today') { const seen = readSeen(); return { ...promptDTO(puzzleFor(date)), dayNumber: diveCount(runs) + 1, total: PROMPTS.length, unseen: PROMPTS.filter(p => !seen.has(p.id)).length }; }
     if (path === 'state') { const run = own(params.get('run')); return run ? state(run) : fail('Dive not found on this browser.'); }
     if (path === 'review') {
       const run = own(params.get('run'));
@@ -50,12 +63,8 @@ export async function localApi(fullPath, data) {
   }
 
   if (path === 'start') {
-    const mode = data.practice === true ? 'practice' : 'daily';
-    let run = mode === 'daily' ? Object.values(runs).find(r => r.mode === 'daily' && r.date === date) : null;
-    if (!run) {
-      run = { id: uuid(), date, mode, promptIds: mode === 'practice' ? practiceIds() : dailyIds(date), next_round: 0, round_start: Date.now() + PREVIEW_MS, paused_at: null, completed: false, answers: [] };
-      runs[run.id] = run; save(runs);
-    }
+    const run = { id: uuid(), date, mode: 'endless', diveNumber: diveCount(runs) + 1, promptIds: endlessIds(), next_round: 0, round_start: Date.now() + PREVIEW_MS, paused_at: null, completed: false, answers: [] };
+    runs[run.id] = run; save(runs);
     return state(run);
   }
   const run = own(data.runId);

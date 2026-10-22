@@ -207,3 +207,6 @@ body[data-phase="done"] .mascot{z-index:15}
 @keyframes companion-chomp{22%{transform:translateX(-7px) scale(.9) rotate(7deg)}42%{transform:translateX(11px) scale(1.24) rotate(-9deg)}58%{transform:translateX(5px) scale(1.02)}74%{transform:translateX(9px) scale(1.18) rotate(-7deg)}}
 .low-power .mascot:not(.poked):not(.celebrate) img{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){.mascot img{animation:none!important}}
+
+.endless-head{display:flex;justify-content:space-between;gap:10px;font-size:14px;letter-spacing:.2em;color:#d5e7f4;background:#0a1424e6;border:1px solid #26364b;border-bottom:0;padding:7px 14px 5px;margin-bottom:-10px}.endless-pills{display:flex;border:1px solid #26364b;background:#0a1424cc;font-size:14px;letter-spacing:.2em;color:var(--muted)}.endless-pills span{padding:8px 14px 6px;border-left:1px solid #26364b;white-space:nowrap}.endless-pills span:first-child{flex:1;border-left:0}.bank-note{margin:0;text-align:center;font-size:15px;line-height:1.5;letter-spacing:.08em;color:#d5e7f4}
+@media(max-width:699px){.endless-head{font-size:11px;letter-spacing:.1em}.endless-pills{font-size:11px;letter-spacing:.1em}.endless-pills span{padding:6px 8px 4px}.bank-note{font-size:13px}}
