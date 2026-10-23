@@ -13,10 +13,14 @@ const BY_ID = Object.fromEntries(PROMPTS.map(p => [p.id, p]));
 const dayIndex = date => Math.floor((Date.parse(date) - Date.parse('2026-07-16')) / 86400000);
 function seeded(seed) { return () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }; }
 function shuffle(list, rand) { const a = list.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-// Daily: everyone gets the same 7 prompts, and no prompt repeats until the whole bank is used.
+// Each browser gets its own random player id, so questions differ per person and change every day.
+const PID = 'ok:player-id';
+function playerId() {
+  try { let id = localStorage.getItem(PID); if (!id) { id = uuid(); localStorage.setItem(PID, id); } return id; } catch { return 'anon'; }
+}
+function hashStr(str) { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
 function dailyIds(date) {
-  const d = Math.max(0, dayIndex(date)), perCycle = Math.floor(PROMPTS.length / 7), cycle = Math.floor(d / perCycle), slot = d % perCycle;
-  return shuffle(PROMPTS.map(p => p.id), seeded(cycle + 7919)).slice(slot * 7, slot * 7 + 7);
+  return shuffle(PROMPTS.map(p => p.id), seeded(hashStr(playerId() + '|' + date))).slice(0, 7);
 }
 const practiceIds = () => shuffle(PROMPTS.map(p => p.id), Math.random).slice(0, 7);
 // Endless: questions this browser hasn't seen come first; seen ones fill the rest.
