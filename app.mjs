@@ -1,7 +1,7 @@
-import { TIERS, BANDS, ROUND_MS, bandFor, shareText, etDate } from './rules.mjs';
-import { Ocean } from './ocean.mjs';
-import { Sound } from './sound.mjs';
-import { DROP_MS, easeInOut, easeOut, iconFor, tierImage, diveChart, distributionChart } from './presentation.mjs';
+import { TIERS, BANDS, ROUND_MS, bandFor, shareText, etDate } from './rules.mjs?v=20261030';
+import { Ocean } from './ocean.mjs?v=20261030';
+import { Sound } from './sound.mjs?v=20261030';
+import { DROP_MS, easeInOut, easeOut, iconFor, tierImage, diveChart, distributionChart } from './presentation.mjs?v=20261030';
 
 const $=id=>document.getElementById(id);
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -23,7 +23,7 @@ if(analyticsAllowed){
   if(runtime.clarity){window.clarity=window.clarity||function(){(window.clarity.q=window.clarity.q||[]).push(arguments)};loadScript('https://www.clarity.ms/tag/'+encodeURIComponent(runtime.clarity));}
 }
 async function api(path,data){
-  if(runtime.static){const {localApi}=await import('./local-api.mjs');return localApi(path,data);}
+  if(runtime.static){const {localApi}=await import('./local-api.mjs?v=20261030');return localApi(path,data);}
   const response=await fetch('/api/'+path,{credentials:'same-origin',cache:'no-store',...(data===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}),signal:AbortSignal.timeout(15000)});
   const body=await response.json();if(!response.ok)throw new Error(body.error||'The signal is lost. Please retry.');return body;
 }

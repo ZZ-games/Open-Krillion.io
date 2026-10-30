@@ -1,7 +1,7 @@
 // Browser-only stand-in for the Cloudflare Worker API, used by the static
 // (GitHub Pages) build. Runs and answers live in localStorage on this device.
-import { TIERS, matchAnswer, etDate, resetAt, ROUND_MS, PREVIEW_MS } from './rules.mjs';
-import { PROMPTS } from './prompts.mjs';
+import { TIERS, matchAnswer, etDate, resetAt, ROUND_MS, PREVIEW_MS } from './rules.mjs?v=20261030';
+import { PROMPTS } from './prompts.mjs?v=20261030';
 
 const KEY = 'ok:static-runs-v2';
 const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } };

@@ -1,5 +1,5 @@
-import { easeInOut, easeOut } from './presentation.mjs';
-import { Seascape } from './seascape.mjs';
+import { easeInOut, easeOut } from './presentation.mjs?v=20261030';
+import { Seascape } from './seascape.mjs?v=20261030';
 const mix=(a,b,t)=>a+(b-a)*t;
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 const stops=[[0,[29,85,128]],[150,[18,58,94]],[350,[11,21,38]],[800,[8,16,32]],[1400,[5,10,20]],[2600,[3,7,15]],[5200,[2,5,11]]];
