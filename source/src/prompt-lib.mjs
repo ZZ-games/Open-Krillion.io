@@ -1,6 +1,6 @@
 // Helper for writing prompts. Tiers: plankton 10 · tooclever 15 · schooler 30 · rare 60 · deepcut 85 · krillion 100
 // Answers are separated by ";" and extra accepted spellings follow a "/" (so answers can't contain "/" or ";").
-import { normalize } from './rules.mjs?v=20261030';
+import { normalize } from './rules.mjs?v=20261119';
 const ORDER = ['plankton', 'tooclever', 'schooler', 'rare', 'deepcut', 'krillion'];
 export function P(id, text, tiers) {
   const answers = [], seen = new Set();

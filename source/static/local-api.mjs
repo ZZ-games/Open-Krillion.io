@@ -1,7 +1,7 @@
 // Browser-only stand-in for the Cloudflare Worker API, used by the static
 // (GitHub Pages) build. Runs and answers live in localStorage on this device.
-import { TIERS, matchAnswer, etDate, resetAt, ROUND_MS, PREVIEW_MS } from './rules.mjs?v=20261030';
-import { PROMPTS } from './prompts.mjs?v=20261030';
+import { TIERS, matchAnswer, etDate, resetAt, ROUND_MS, PREVIEW_MS } from './rules.mjs?v=20261119';
+import { PROMPTS } from './prompts.mjs?v=20261119';
 
 const KEY = 'ok:static-runs-v2';
 const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } };
@@ -45,7 +45,7 @@ function promptDTO(p) {
 }
 function state(run) {
   const results = run.answers.slice().sort((a, b) => a.round - b.round);
-  return { ...promptDTO(runPuzzle(run)), ...(run.diveNumber ? { dayNumber: run.diveNumber } : {}), runId: run.id, mode: run.mode, round: run.next_round, roundStart: run.round_start, pausedAt: run.paused_at || null, serverNow: Date.now(), completed: !!run.completed, results, score: results.reduce((s, r) => s + r.score, 0) };
+  return { ...promptDTO(runPuzzle(run)), ...(run.diveNumber ? { dayNumber: run.diveNumber } : {}), runId: run.id, updatedAt: run.updated || 0, mode: run.mode, round: run.next_round, roundStart: run.round_start, pausedAt: run.paused_at || null, serverNow: Date.now(), completed: !!run.completed, results, score: results.reduce((s, r) => s + r.score, 0) };
 }
 
 export async function localApi(fullPath, data) {
@@ -67,12 +67,13 @@ export async function localApi(fullPath, data) {
   }
 
   if (path === 'start') {
-    const run = { id: uuid(), date, mode: 'endless', diveNumber: diveCount(runs) + 1, promptIds: endlessIds(), next_round: 0, round_start: Date.now() + PREVIEW_MS, paused_at: null, completed: false, answers: [] };
+    const run = { id: uuid(), updated: Date.now(), date, mode: 'endless', diveNumber: diveCount(runs) + 1, promptIds: endlessIds(), next_round: 0, round_start: Date.now() + PREVIEW_MS, paused_at: null, completed: false, answers: [] };
     runs[run.id] = run; save(runs);
     return state(run);
   }
   const run = own(data.runId);
   if (!run) fail('Dive not found.');
+  run.updated = Date.now();
 
   if (path === 'pause') {
     if (data.paused === true && !run.completed && run.round_start !== null && !run.paused_at && Date.now() <= run.round_start + ROUND_MS) run.paused_at = Date.now();

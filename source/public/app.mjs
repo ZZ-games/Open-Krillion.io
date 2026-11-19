@@ -1,7 +1,7 @@
-import { TIERS, BANDS, ROUND_MS, bandFor, shareText, etDate } from './rules.mjs?v=20261030';
-import { Ocean } from './ocean.mjs?v=20261030';
-import { Sound } from './sound.mjs?v=20261030';
-import { DROP_MS, easeInOut, easeOut, iconFor, tierImage, diveChart, distributionChart } from './presentation.mjs?v=20261030';
+import { TIERS, BANDS, ROUND_MS, bandFor, shareText, etDate } from './rules.mjs?v=20261119';
+import { Ocean } from './ocean.mjs?v=20261119';
+import { Sound } from './sound.mjs?v=20261119';
+import { DROP_MS, easeInOut, easeOut, iconFor, tierImage, diveChart, distributionChart } from './presentation.mjs?v=20261119';
 
 const $=id=>document.getElementById(id);
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -23,7 +23,7 @@ if(analyticsAllowed){
   if(runtime.clarity){window.clarity=window.clarity||function(){(window.clarity.q=window.clarity.q||[]).push(arguments)};loadScript('https://www.clarity.ms/tag/'+encodeURIComponent(runtime.clarity));}
 }
 async function api(path,data){
-  if(runtime.static){const {localApi}=await import('./local-api.mjs?v=20261030');return localApi(path,data);}
+  if(runtime.static){const {localApi}=await import('./local-api.mjs?v=20261119');return localApi(path,data);}
   const response=await fetch('/api/'+path,{credentials:'same-origin',cache:'no-store',...(data===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}),signal:AbortSignal.timeout(15000)});
   const body=await response.json();if(!response.ok)throw new Error(body.error||'The signal is lost. Please retry.');return body;
 }
@@ -100,4 +100,4 @@ function viewport(){const height=window.visualViewport?.height||innerHeight;docu
 window.render_game_to_text=()=>JSON.stringify({phase,prompt:game?.prompts[game.round]?.text||null,round:game?.round??0,totalRounds:7,score:Math.round(visualScore),targetScore:currentScore,depth:Math.round(scene.depth),targetDepth:scene.target,cameraDepth:Math.round(scene.cameraDepth),effect:scene.fx?.tier||null,seconds:game?Math.max(0,Math.ceil((game.roundStart+ROUND_MS-now())/1000)):null,results:game?.results.map(r=>({answer:r.answer,tier:r.tier,score:r.score}))||[],draft:$('answer').value,correction,mode:game?.mode||'daily',paused,sound:{supported:!!(window.AudioContext||window.webkitAudioContext),state:sound.ac?.state||'not-started',muted:sound.muted},coordinates:'origin at top-left, x rightward, y downward; depth in metres',lowPower:settings.lowPower});
 window.advanceTime=async ms=>{if(!runtime.local)return;clockOffset+=Math.max(0,ms);scene.time+=ms/1000;scene.depth=scene.target;scene.active=scene.targetActive;scene.cameraDepth=scene.cameraTarget;scene.cameraJob=null;scene.draw();tick();await new Promise(r=>setTimeout(r,0));};
 setInterval(tick,80);
-(async()=>{try{today=await api('today');$('day-number').textContent='DIVE #'+today.dayNumber;$('sample-note').hidden=!today.sample;if(today.total)$('bank-note').textContent=`${today.total} questions available. ${today.unseen?`${today.unseen} you haven’t seen yet come first; `:'You’ve seen them all; '}review questions fill the rest of each seven-question dive.`;const saved=read('ok:run',null);if(saved?.runId){try{setGame(await api('state?run='+encodeURIComponent(saved.runId)));if(game.pausedAt)setGame(await api('pause',{runId:game.runId,paused:false}));if(game.completed){game=null;write('ok:run',null);updateHud();}else if(game.roundStart===null)showLanding(game.results.at(-1));else showRound()}catch{write('ok:run',null)}}}catch(e){$('boot-error').textContent=e.message;$('boot-error').hidden=false;}})();
+(async()=>{try{today=await api('today');$('day-number').textContent='DIVE #'+today.dayNumber;$('sample-note').hidden=!today.sample;if(today.total)$('bank-note').textContent=`${today.total} questions available. ${today.unseen?`${today.unseen} you haven’t seen yet come first; `:'You’ve seen them all; '}review questions fill the rest of each seven-question dive.`;const saved=read('ok:run',null);if(saved?.runId){try{setGame(await api('state?run='+encodeURIComponent(saved.runId)));if(Date.now()-(game.updatedAt||0)>90000){game=null;write('ok:run',null);}else{if(game.pausedAt)setGame(await api('pause',{runId:game.runId,paused:false}));if(game.completed){game=null;write('ok:run',null);updateHud();}else if(game.roundStart===null)showLanding(game.results.at(-1));else showRound()}}catch{write('ok:run',null)}}}catch(e){$('boot-error').textContent=e.message;$('boot-error').hidden=false;}})();

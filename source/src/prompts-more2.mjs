@@ -1,4 +1,4 @@
-import { P } from './prompt-lib.mjs?v=20261030';
+import { P } from './prompt-lib.mjs?v=20261119';
 
 export const MORE2 = [
 P('birds', 'Name a bird', {

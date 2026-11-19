@@ -1,4 +1,4 @@
-import { TIERS } from './rules.mjs?v=20261030';
+import { TIERS } from './rules.mjs?v=20261119';
 export const DROP_MS = { plankton: 3400, tooclever: 3000, schooler: 3000, rare: 3400, deepcut: 4300, krillion: 4600, miss: 900 };
 export const easeInOut = t => t < .5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
 export const easeOut = t => 1 - (1 - t) ** 3;
