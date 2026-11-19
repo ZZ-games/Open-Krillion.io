@@ -3,6 +3,7 @@ import { MORE1 } from './prompts-more1.mjs?v=20261120';
 import { MORE2 } from './prompts-more2.mjs?v=20261120';
 import { MORE3 } from './prompts-more3.mjs?v=20261120';
 import { MORE4 } from './prompts-more4.mjs?v=20261120';
+import { MORE5 } from './prompts-more5.mjs?v=20261120';
 
 const BASE = [
 P('fruit', 'Name a fruit', {
@@ -330,4 +331,4 @@ P('potato', 'Name a way to prepare potatoes', {
 }),
 ];
 
-export const PROMPTS = [...BASE, ...MORE1, ...MORE2, ...MORE3, ...MORE4];
+export const PROMPTS = [...BASE, ...MORE1, ...MORE2, ...MORE3, ...MORE4, ...MORE5];
