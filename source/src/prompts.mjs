@@ -1,8 +1,8 @@
-import { P } from './prompt-lib.mjs?v=20261119';
-import { MORE1 } from './prompts-more1.mjs?v=20261119';
-import { MORE2 } from './prompts-more2.mjs?v=20261119';
-import { MORE3 } from './prompts-more3.mjs?v=20261119';
-import { MORE4 } from './prompts-more4.mjs?v=20261119';
+import { P } from './prompt-lib.mjs?v=20261120';
+import { MORE1 } from './prompts-more1.mjs?v=20261120';
+import { MORE2 } from './prompts-more2.mjs?v=20261120';
+import { MORE3 } from './prompts-more3.mjs?v=20261120';
+import { MORE4 } from './prompts-more4.mjs?v=20261120';
 
 const BASE = [
 P('fruit', 'Name a fruit', {

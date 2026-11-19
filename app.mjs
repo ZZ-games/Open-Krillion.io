@@ -1,7 +1,8 @@
-import { TIERS, BANDS, ROUND_MS, bandFor, shareText, etDate } from './rules.mjs?v=20261119';
-import { Ocean } from './ocean.mjs?v=20261119';
-import { Sound } from './sound.mjs?v=20261119';
-import { DROP_MS, easeInOut, easeOut, iconFor, tierImage, diveChart, distributionChart } from './presentation.mjs?v=20261119';
+import { TIERS, BANDS, ROUND_MS, bandFor, shareText, etDate } from './rules.mjs?v=20261120';
+import { Ocean } from './ocean.mjs?v=20261120';
+import { Sound } from './sound.mjs?v=20261120';
+import { DROP_MS, easeInOut, easeOut, iconFor, tierImage, diveChart, distributionChart } from './presentation.mjs?v=20261120';
+try{if(/[?&]reset\b/.test(location.search)){Object.keys(localStorage).filter(k=>k.startsWith('ok:')).forEach(k=>localStorage.removeItem(k));history.replaceState(null,'',location.pathname);}}catch{}
 
 const $=id=>document.getElementById(id);
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -23,7 +24,7 @@ if(analyticsAllowed){
   if(runtime.clarity){window.clarity=window.clarity||function(){(window.clarity.q=window.clarity.q||[]).push(arguments)};loadScript('https://www.clarity.ms/tag/'+encodeURIComponent(runtime.clarity));}
 }
 async function api(path,data){
-  if(runtime.static){const {localApi}=await import('./local-api.mjs?v=20261119');return localApi(path,data);}
+  if(runtime.static){const {localApi}=await import('./local-api.mjs?v=20261120');return localApi(path,data);}
   const response=await fetch('/api/'+path,{credentials:'same-origin',cache:'no-store',...(data===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}),signal:AbortSignal.timeout(15000)});
   const body=await response.json();if(!response.ok)throw new Error(body.error||'The signal is lost. Please retry.');return body;
 }

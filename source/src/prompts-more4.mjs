@@ -1,4 +1,4 @@
-import { P } from './prompt-lib.mjs?v=20261119';
+import { P } from './prompt-lib.mjs?v=20261120';
 
 export const MORE4 = [
 P('nfl', 'Name an NFL team', {

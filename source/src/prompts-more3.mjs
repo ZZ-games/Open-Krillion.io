@@ -1,4 +1,4 @@
-import { P } from './prompt-lib.mjs?v=20261119';
+import { P } from './prompt-lib.mjs?v=20261120';
 
 export const MORE3 = [
 // ---- clean rewrites of prompts trimmed from batch 2 ----
